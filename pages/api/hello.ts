@@ -1,10 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiHandler } from "next";
+import { getAccessToken, withApiAuthRequired } from "@auth0/nextjs-auth0";
 
-type Data = {
-  name: string;
+const handler: NextApiHandler = async (req, res) => {
+  const { accessToken } = await getAccessToken(req, res);
+
+  res.status(200).json({ token: accessToken });
 };
 
-export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  res.status(200).json({ name: "John Doe" });
-}
+export default withApiAuthRequired(handler);
