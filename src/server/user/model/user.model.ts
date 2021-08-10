@@ -1,6 +1,4 @@
-class UserProviderModel {
-  constructor(public name = "", public accessToken = "", public tokenExpired = 0) {}
-}
+import type { UserProviderModel } from "./user-provider.model";
 
 class UserModel {
   constructor(
@@ -17,4 +15,4 @@ class UserModel {
   }
 }
 
-export { UserModel, UserProviderModel };
+export { UserModel };
