@@ -40,8 +40,7 @@ class GoogleDriveService implements IGoogleDriveService {
     //   .then(({ status, data }) => res.status(status).json(data))
     //   .catch((e) => googleErrorHandle(e, res));
 
-    const GOOGLE_DRIVE_API_URL = "https://www.googleapis.com";
-    const url = new URL("/upload/drive/v3/files", GOOGLE_DRIVE_API_URL);
+    const url = new URL("/upload/drive/v3/files", "https://www.googleapis.com");
     url.searchParams.set("uploadType", "media");
     url.searchParams.set("id", userId);
     url.searchParams.set("name", name);
