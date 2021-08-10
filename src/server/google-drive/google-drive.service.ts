@@ -7,17 +7,11 @@ class GoogleDriveService implements IGoogleDriveService {
   private readonly _oauthClient = new OAuth2Client();
 
   async checkToken(accessToken: string): Promise<TokenInfo> {
-    const res = await this._oauthClient.getTokenInfo(accessToken ?? "").catch((e) => {
+    return this._oauthClient.getTokenInfo(accessToken ?? "").catch((e) => {
       const { status, data } = e?.response;
 
-      return new GoogleDriveException(status ?? 500, data || e);
+      throw new GoogleDriveException(status ?? 500, data || e);
     });
-
-    if (res instanceof GoogleDriveException) {
-      throw res;
-    }
-
-    return res;
   }
 
   async createFile(
@@ -46,29 +40,28 @@ class GoogleDriveService implements IGoogleDriveService {
     //   .then(({ status, data }) => res.status(status).json(data))
     //   .catch((e) => googleErrorHandle(e, res));
 
-    const GOOGLE_DRIVE_API_URL = "https://www.googleapis.com/upload/drive/v3";
-    const url = new URL("/files", GOOGLE_DRIVE_API_URL);
+    const GOOGLE_DRIVE_API_URL = "https://www.googleapis.com";
+    const url = new URL("/upload/drive/v3/files", GOOGLE_DRIVE_API_URL);
     url.searchParams.set("uploadType", "media");
+    url.searchParams.set("id", userId);
+    url.searchParams.set("name", name);
+    url.searchParams.set("mimeType", mimeType);
 
-    const res = await fetch(url.toString(), {
+    return fetch(url.toString(), {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify({ id: userId, name, mimeType }),
+      body: JSON.stringify(data),
     })
       .then<IGoogleDriveResponse>(async (res) => {
         const data = await res.json().catch(console.error);
 
         return { data, status: res.status };
       })
-      .catch((e) => new GoogleDriveException(500, e));
-
-    if (res instanceof GoogleDriveException) {
-      throw res;
-    }
-
-    return res;
+      .catch((e) => {
+        throw new GoogleDriveException(500, e);
+      });
   }
 }
 

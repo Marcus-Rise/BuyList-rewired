@@ -7,6 +7,13 @@ abstract class AbstractException extends Error {
 
     this.name = name;
   }
+
+  get errorParsed() {
+    return {
+      name: this.name,
+      ...JSON.parse(this.message),
+    };
+  }
 }
 
 export { AbstractException };

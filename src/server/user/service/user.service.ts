@@ -2,6 +2,7 @@ import type { UserModel } from "../model";
 import { UserModelFactory } from "../model";
 import type { IUserService } from "./user.service.interface";
 import type { IUserGetResponseDto } from "./user-get-response.dto";
+import { UserException } from "./user.exception";
 
 interface IAuth0ApiTokenResponse {
   access_token: string;
@@ -11,63 +12,58 @@ interface IAuth0ApiTokenResponse {
 
 interface IAuth0ApiErrorResponse {
   error: string;
-  message: string;
-  statusCode: number;
+  error_description: string;
 }
 
 const isAuth0ApiErrorResponse = (
-  res: unknown | IAuth0ApiErrorResponse,
+  res: Record<string, unknown> | IAuth0ApiErrorResponse,
 ): res is IAuth0ApiErrorResponse => {
-  return (
-    typeof res === "object" &&
-    res !== null &&
-    "error" in res &&
-    "message" in res &&
-    "statusCode" in res
-  );
+  return "error" in res && "error_description" in res;
 };
-
-class Auth0ApiError extends Error {
-  code: number;
-  title: string;
-
-  constructor({ statusCode, message, error }: IAuth0ApiErrorResponse) {
-    super(message);
-    this.code = statusCode;
-    this.title = error;
-  }
-}
 
 class UserService implements IUserService {
   async get(userId: string): Promise<UserModel> {
     const AUTH0_TENANT = process.env.AUTH0_ISSUER_BASE_URL;
-    const AUTH0_API_URL = AUTH0_TENANT + "/api/v2/";
     const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID;
     const AUTH0_CLIENT_SECRET = process.env.AUTH0_CLIENT_SECRET;
+    const apiUrl = new URL("/api/v2/", AUTH0_TENANT);
 
-    const getApiTokenUrl = new URL("/oauth/token", AUTH0_TENANT);
-    const { token_type, access_token } = await fetch(getApiTokenUrl.toString(), {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        client_id: AUTH0_CLIENT_ID,
-        client_secret: AUTH0_CLIENT_SECRET,
-        audience: AUTH0_API_URL,
-        grant_type: "client_credentials",
-      }),
-    }).then<IAuth0ApiTokenResponse>((res) => res.json());
+    const { token_type, access_token } = await fetch(
+      new URL("/oauth/token", AUTH0_TENANT).toString(),
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          client_id: AUTH0_CLIENT_ID,
+          client_secret: AUTH0_CLIENT_SECRET,
+          audience: apiUrl,
+          grant_type: "client_credentials",
+        }),
+      },
+    ).then<IAuth0ApiTokenResponse>(async (res) => {
+      const data = await res.json();
 
-    const getUrlApiUrl = new URL("users/" + userId, AUTH0_API_URL);
-    const userDto = await fetch(getUrlApiUrl.toString(), {
+      if (isAuth0ApiErrorResponse(data)) {
+        throw new UserException(res.status, data);
+      }
+
+      return data;
+    });
+
+    const dto = await fetch(new URL(`${apiUrl}users/${userId}`).toString(), {
       method: "GET",
       headers: { Authorization: `${token_type} ${access_token}` },
-    }).then<IAuth0ApiErrorResponse | IUserGetResponseDto>((res) => res.json());
+    }).then<IUserGetResponseDto>(async (res) => {
+      const data = await res.json();
 
-    if (isAuth0ApiErrorResponse(userDto)) {
-      throw new Auth0ApiError(userDto);
-    }
+      if (isAuth0ApiErrorResponse(data)) {
+        throw new UserException(res.status, data);
+      }
 
-    return UserModelFactory.fromGetResponseDto(userDto);
+      return data;
+    });
+
+    return UserModelFactory.fromGetResponseDto(dto);
   }
 }
 
