@@ -24,10 +24,10 @@ const handler: NextApiHandler = async (
       if (!googleProvider) {
         throw new UserException("google identifier not found", 404);
       } else {
-        if (googleProvider.isTokenExpired) {
-          //todo refresh token
-          throw new UserException("google token is expired", 403);
-        }
+        /* if (googleProvider.isTokenExpired) {
+           //todo refresh token
+           throw new UserException("google token is expired", 403);
+         }*/
 
         return {
           accessToken: googleProvider.accessToken,
