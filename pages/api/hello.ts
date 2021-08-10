@@ -2,8 +2,9 @@ import type { NextApiHandler } from "next";
 import { getSession, withApiAuthRequired } from "@auth0/nextjs-auth0";
 import type { IUserService } from "../../src/server/user";
 import { UserException, UserService } from "../../src/server/user";
-import type { GoogleDriveException, IGoogleDriveService } from "../../src/server/google-drive";
+import type { IGoogleDriveService } from "../../src/server/google-drive";
 import { GoogleDriveService } from "../../src/server/google-drive";
+import type { AbstractException } from "../../src/server/utils/exception";
 
 const handler: NextApiHandler = async (
   req,
@@ -21,8 +22,12 @@ const handler: NextApiHandler = async (
     .get(session.user.sub)
     .then(({ googleProvider, id }) => {
       if (!googleProvider) {
-        throw new UserException(500, "google identifier not found");
+        throw new UserException("google identifier not found", 404);
       } else {
+        if (googleProvider.isTokenExpired) {
+          throw new UserException("google token is expired", 403);
+        }
+
         return {
           accessToken: googleProvider.accessToken,
           userId: id,
@@ -40,13 +45,10 @@ const handler: NextApiHandler = async (
             userId,
             accessToken,
           ),
-        )
-        .then(({ status, data }) => response.status(status).json(data))
-        .catch(({ errorParsed, code }: GoogleDriveException) =>
-          response.status(code).json(errorParsed),
         ),
     )
-    .catch(({ code, errorParsed }: UserException) => response.status(code).json(errorParsed));
+    .then(({ status, data }) => response.status(status).json(data))
+    .catch(({ code, errorParsed }: AbstractException) => response.status(code).json(errorParsed));
 };
 
 export default withApiAuthRequired(handler);

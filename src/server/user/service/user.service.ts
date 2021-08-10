@@ -44,7 +44,7 @@ class UserService implements IUserService {
       const data = await res.json();
 
       if (this.isAuth0ApiErrorResponse(data)) {
-        throw new UserException(res.status, data);
+        throw new UserException(data, res.status);
       }
 
       return data;
@@ -63,7 +63,7 @@ class UserService implements IUserService {
       const data = await res.json();
 
       if (this.isAuth0ApiErrorResponse(data)) {
-        throw new UserException(res.status, data);
+        throw new UserException(data, res.status);
       }
 
       return data;

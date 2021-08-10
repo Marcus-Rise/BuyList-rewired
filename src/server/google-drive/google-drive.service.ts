@@ -10,7 +10,7 @@ class GoogleDriveService implements IGoogleDriveService {
     return this._oauthClient.getTokenInfo(accessToken ?? "").catch((e) => {
       const { status, data } = e?.response;
 
-      throw new GoogleDriveException(status ?? 500, data || e);
+      throw new GoogleDriveException(data || e, status);
     });
   }
 
@@ -59,7 +59,7 @@ class GoogleDriveService implements IGoogleDriveService {
         return { data, status: res.status };
       })
       .catch((e) => {
-        throw new GoogleDriveException(500, e);
+        throw new GoogleDriveException(e);
       });
   }
 }
