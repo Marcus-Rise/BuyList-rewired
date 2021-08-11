@@ -2,6 +2,8 @@ import type { IGoogleDriveResponse, IGoogleDriveService } from "./google-drive.s
 import type { TokenInfo } from "google-auth-library";
 import { OAuth2Client } from "google-auth-library";
 import { GoogleDriveException } from "./google-drive.exception";
+import { google } from "googleapis";
+import type { UserProviderModel } from "../user";
 
 class GoogleDriveService implements IGoogleDriveService {
   private readonly _oauthClient = new OAuth2Client();
@@ -19,45 +21,38 @@ class GoogleDriveService implements IGoogleDriveService {
     mimeType: string,
     data: string,
     userId: string,
-    accessToken: string,
+    { accessToken, refreshToken }: UserProviderModel,
   ): Promise<IGoogleDriveResponse> {
-    // oAuth2Client.setCredentials({
-    //   access_token: googleAccessToken,
-    // });
-    //
-    // const drive = google.drive({ version: "v3" });
-    //
-    // await drive.files
-    //   .create({
-    //     requestBody: {
-    //       name: "test.txt",
-    //     },
-    //     media: {
-    //       mimeType: "text/plain",
-    //       body: "Hello World",
-    //     },
-    //   })
-    //   .then(({ status, data }) => res.status(status).json(data))
-    //   .catch((e) => googleErrorHandle(e, res));
+    if (!refreshToken) {
+      throw new GoogleDriveException("no provider refresh token", 400);
+    }
 
-    const url = new URL("/upload/drive/v3/files", "https://www.googleapis.com");
-    url.searchParams.set("uploadType", "media");
-    url.searchParams.set("id", userId);
-    url.searchParams.set("name", name);
-    url.searchParams.set("mimeType", mimeType);
+    await this.checkToken(accessToken).catch(({ code, message }) => {
+      throw new GoogleDriveException(message, code);
+    });
 
-    return fetch(url.toString(), {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify(data),
-    })
-      .then<IGoogleDriveResponse>(async (res) => {
-        const data = await res.json().catch(console.error);
+    /*this._oauthClient.setCredentials({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    });*/
 
-        return { data, status: res.status };
+    const drive = google.drive({
+      version: "v3",
+      // auth: this._oauthClient,
+      headers: { Authorization: `Bearer ${accessToken}` },
+    });
+
+    return drive.files
+      .create({
+        requestBody: {
+          name: "test.txt",
+        },
+        media: {
+          mimeType: "text/plain",
+          body: "Hello World",
+        },
       })
+      .then(({ status, data }) => ({ status, data }))
       .catch((e) => {
         throw new GoogleDriveException(e);
       });

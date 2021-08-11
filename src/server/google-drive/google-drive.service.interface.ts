@@ -1,4 +1,4 @@
-import type { TokenInfo } from "google-auth-library";
+import type { UserProviderModel } from "../user";
 
 interface IGoogleDriveResponse<T = any> {
   data: T;
@@ -6,14 +6,12 @@ interface IGoogleDriveResponse<T = any> {
 }
 
 interface IGoogleDriveService {
-  checkToken(accessToken: string): Promise<TokenInfo>;
-
   createFile(
     name: string,
     mimeType: string,
     data: string,
     userId: string,
-    accessToken: string,
+    provider: UserProviderModel,
   ): Promise<IGoogleDriveResponse>;
 }
 

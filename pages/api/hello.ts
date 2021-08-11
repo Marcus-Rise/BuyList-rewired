@@ -25,36 +25,20 @@ const handler: NextApiHandler = async (
         throw new UserException("provider not found", 404);
       }
 
-      if (!googleProvider.refreshToken) {
-        throw new UserException("no provider refresh token", 400);
-      }
-
-      if (googleProvider.isTokenExpired) {
-        //todo handle expired and refresh token
-        throw new UserException("provider token is expired", 403);
-      }
-
-        return {
-          accessToken: googleProvider.accessToken,
-          userId: id,
-        };
-      }
+      return {
+        provider: googleProvider,
+        userId: id,
+      };
     })
-    .then(({ accessToken, userId }) =>
-      googleDriveService
-        .checkToken(accessToken)
-        .then(() =>
-          googleDriveService.createFile(
-            "test.txt",
-            "text/plain",
-            "Hello world",
-            userId,
-            accessToken,
-          ),
-        ),
+    .then(({ provider, userId }) =>
+      googleDriveService.createFile("test.txt", "text/plain", "Hello world", userId, provider),
     )
     .then(({ status, data }) => response.status(status).json(data))
-    .catch(({ code, errorParsed }: AbstractException) => response.status(code).json(errorParsed));
+    .catch((error: AbstractException) => {
+      console.error(error);
+
+      return response.status(error.code).json(error.errorParsed);
+    });
 };
 
 export default withApiAuthRequired(handler);
