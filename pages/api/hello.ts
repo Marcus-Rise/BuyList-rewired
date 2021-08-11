@@ -22,12 +22,17 @@ const handler: NextApiHandler = async (
     .get(session.user.sub)
     .then(({ googleProvider, id }) => {
       if (!googleProvider) {
-        throw new UserException("google identifier not found", 404);
-      } else {
-        /* if (googleProvider.isTokenExpired) {
-           //todo refresh token
-           throw new UserException("google token is expired", 403);
-         }*/
+        throw new UserException("provider not found", 404);
+      }
+
+      if (!googleProvider.refreshToken) {
+        throw new UserException("no provider refresh token", 400);
+      }
+
+      if (googleProvider.isTokenExpired) {
+        //todo handle expired and refresh token
+        throw new UserException("provider token is expired", 403);
+      }
 
         return {
           accessToken: googleProvider.accessToken,
