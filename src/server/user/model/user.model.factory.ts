@@ -4,7 +4,10 @@ import { UserProviderModelFactory } from "./user-provider.model.factory";
 
 class UserModelFactory {
   static fromGetResponseDto(dto: IUserGetResponseDto): UserModel {
-    const providers = dto.identities.map((i) => UserProviderModelFactory.fromGetResponseDto(i));
+    const lastLogin = new Date(dto.last_login);
+    const providers = dto.identities.map((i) =>
+      UserProviderModelFactory.fromGetResponseDto(i, lastLogin),
+    );
 
     return new UserModel(
       dto.user_id,

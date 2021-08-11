@@ -3,11 +3,11 @@ class UserProviderModel {
     public name = "",
     public accessToken = "",
     public refreshToken = "",
-    public tokenExpired = 0,
+    public tokenExpired = new Date(),
   ) {}
 
   get isTokenExpired(): boolean {
-    return Date.now() >= this.tokenExpired * 1000;
+    return Date.now() >= this.tokenExpired.getTime();
   }
 }
 
