@@ -3,7 +3,7 @@ import type { IUserProviderGetResponseDto } from "../service/user-get-response.d
 
 class UserProviderModelFactory {
   static fromGetResponseDto(dto: IUserProviderGetResponseDto): UserProviderModel {
-    return new UserProviderModel(dto.provider, dto.access_token, dto.expires_in);
+    return new UserProviderModel(dto.provider, dto.access_token, dto.refresh_token, dto.expires_in);
   }
 }
 
