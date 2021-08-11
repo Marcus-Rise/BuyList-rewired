@@ -23,11 +23,13 @@ class GoogleDriveService implements IGoogleDriveService {
     });
     oauthClient.forceRefreshOnFailure = true;
 
-    await oauthClient.getTokenInfo(accessToken ?? "").catch((e) => {
+    const tokenInfo = await oauthClient.getTokenInfo(accessToken ?? "").catch((e) => {
       const { status, data } = e?.response;
 
       throw new GoogleDriveException(data || e, status);
     });
+
+    console.debug(tokenInfo);
 
     const drive = google.drive({
       version: "v3",
