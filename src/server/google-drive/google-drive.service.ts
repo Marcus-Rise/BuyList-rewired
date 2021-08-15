@@ -18,17 +18,9 @@ class GoogleDriveService implements IGoogleDriveService {
     });
     oauthClient.forceRefreshOnFailure = true;
 
-    const tokenInfo = await oauthClient.getTokenInfo(accessToken).catch(async () => {
-      // renew token
-      const token = await oauthClient.getAccessToken().catch((e) => {
-        const { status, data } = e?.response;
-        throw new GoogleDriveException(data || e, status);
-      });
-
-      oauthClient.setCredentials({
-        access_token: token.token,
-        refresh_token: refreshToken,
-      });
+    const tokenInfo = await oauthClient.getTokenInfo(accessToken).catch((e) => {
+      const { status, data } = e?.response;
+      throw new GoogleDriveException(data || e, status);
     });
 
     console.debug("token info", tokenInfo);
