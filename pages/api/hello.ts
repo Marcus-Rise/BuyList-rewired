@@ -25,6 +25,8 @@ const handler: NextApiHandler = async (
         throw new UserException("provider not found", 404);
       }
 
+      console.log(id);
+
       return {
         provider: googleProvider,
         userId: id,
