@@ -42,25 +42,26 @@ class GoogleDriveService implements IGoogleDriveService {
   async createFile(
     name: string,
     mimeType: string,
-    data: string,
+    content: string,
     provider: UserProviderModel,
   ): Promise<IGoogleDriveResponse> {
     const api = await this.getApi(provider);
 
-    return api.files
+    const { status, data } = await api.files
       .create({
         requestBody: {
-          name: "test.txt",
+          name,
         },
         media: {
-          mimeType: "text/plain",
-          body: "Hello World",
+          mimeType,
+          body: content,
         },
       })
-      .then(({ status, data }) => ({ status, data }))
       .catch(({ code, message }) => {
         throw new GoogleDriveException(message, code);
       });
+
+    return { status, data };
   }
 }
 
