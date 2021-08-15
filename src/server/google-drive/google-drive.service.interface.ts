@@ -10,7 +10,6 @@ interface IGoogleDriveService {
     name: string,
     mimeType: string,
     data: string,
-    userId: string,
     provider: UserProviderModel,
   ): Promise<IGoogleDriveResponse>;
 }

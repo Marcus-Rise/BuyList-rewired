@@ -1,7 +1,9 @@
 import type { UserModel } from "../model";
 
 interface IUserService {
-  get(userId: string): Promise<UserModel>;
+  readonly user: UserModel;
+
+  load(userId: string): Promise<void>;
 }
 
 export type { IUserService };

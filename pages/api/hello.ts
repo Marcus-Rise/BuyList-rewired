@@ -19,21 +19,18 @@ const handler: NextApiHandler = async (
   }
 
   return userService
-    .get(session.user.sub)
-    .then(({ googleProvider, id }) => {
+    .load(session.user.sub)
+    .then(() => {
+      const { googleProvider } = userService.user;
+
       if (!googleProvider) {
         throw new UserException("provider not found", 404);
       }
 
-      console.log(id);
-
-      return {
-        provider: googleProvider,
-        userId: id,
-      };
+      return googleProvider;
     })
-    .then(({ provider, userId }) =>
-      googleDriveService.createFile("test.txt", "text/plain", "Hello world", userId, provider),
+    .then((provider) =>
+      googleDriveService.createFile("test.txt", "text/plain", "Hello world", provider),
     )
     .then(({ status, data }) => {
       console.log(data);

@@ -1,5 +1,4 @@
-import type { UserModel } from "../model";
-import { UserModelFactory } from "../model";
+import { UserModel, UserModelFactory } from "../model";
 import type { IUserService } from "./user.service.interface";
 import type { IUserGetResponseDto } from "./user-get-response.dto";
 import { UserException } from "./user.exception";
@@ -21,6 +20,12 @@ class UserService implements IUserService {
     private readonly _clientId = process.env.AUTH0_CLIENT_ID,
     private readonly _clientSecret = process.env.AUTH0_CLIENT_SECRET,
   ) {}
+
+  private _user: UserModel = new UserModel();
+
+  get user(): UserModel {
+    return this._user;
+  }
 
   isAuth0ApiErrorResponse(
     res: Record<string, unknown> | IAuth0ApiErrorResponse,
@@ -51,7 +56,7 @@ class UserService implements IUserService {
     });
   }
 
-  async get(userId: string): Promise<UserModel> {
+  async load(userId: string): Promise<void> {
     const apiUrl = new URL("/api/v2/", this._tenant);
 
     const { token_type, access_token } = await this.getToken();
@@ -69,7 +74,7 @@ class UserService implements IUserService {
       return data;
     });
 
-    return UserModelFactory.fromGetResponseDto(dto);
+    this._user = UserModelFactory.fromGetResponseDto(dto);
   }
 }
 

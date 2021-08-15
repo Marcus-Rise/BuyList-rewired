@@ -43,7 +43,6 @@ class GoogleDriveService implements IGoogleDriveService {
     name: string,
     mimeType: string,
     data: string,
-    userId: string,
     provider: UserProviderModel,
   ): Promise<IGoogleDriveResponse> {
     const api = await this.getApi(provider);
