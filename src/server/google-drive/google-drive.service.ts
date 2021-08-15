@@ -11,14 +11,14 @@ class GoogleDriveService implements IGoogleDriveService {
       throw new GoogleDriveException("no provider refresh token", 400);
     }
 
-    const oauthClient = new OAuth2Client();
-    oauthClient.setCredentials({
+    const auth = new OAuth2Client();
+    auth.setCredentials({
       access_token: accessToken,
       refresh_token: refreshToken,
     });
-    oauthClient.forceRefreshOnFailure = true;
+    auth.forceRefreshOnFailure = true;
 
-    const tokenInfo = await oauthClient.getTokenInfo(accessToken).catch((e) => {
+    const tokenInfo = await auth.getTokenInfo(accessToken).catch((e) => {
       const { status, data } = e?.response;
       throw new GoogleDriveException(data || e, status);
     });
@@ -27,7 +27,7 @@ class GoogleDriveService implements IGoogleDriveService {
 
     return google.drive({
       version: "v3",
-      auth: oauthClient,
+      auth,
     });
   }
 
