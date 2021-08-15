@@ -33,7 +33,7 @@ const handler: NextApiHandler = async (
       googleDriveService.createFile("test.txt", "text/plain", "Hello world", provider),
     )
     .then(({ status, data }) => {
-      console.log(data);
+      console.debug(data);
 
       response.status(status).json(data);
     })
