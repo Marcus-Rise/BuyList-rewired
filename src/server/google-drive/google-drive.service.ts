@@ -55,6 +55,16 @@ class GoogleDriveService implements IGoogleDriveService {
 
     return { status, data };
   }
+
+  async fileList(provider: UserProviderModel): Promise<IGoogleDriveResponse> {
+    const api = await this.getApi(provider);
+
+    const { status, data } = await api.files.list().catch(({ code, message }) => {
+      throw new GoogleDriveException(message, code);
+    });
+
+    return { status, data };
+  }
 }
 
 export { GoogleDriveService };

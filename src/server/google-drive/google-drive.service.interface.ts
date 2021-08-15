@@ -12,6 +12,8 @@ interface IGoogleDriveService {
     data: string,
     provider: UserProviderModel,
   ): Promise<IGoogleDriveResponse>;
+
+  fileList(provider: UserProviderModel): Promise<IGoogleDriveResponse>;
 }
 
 export type { IGoogleDriveService, IGoogleDriveResponse };
