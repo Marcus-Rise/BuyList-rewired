@@ -5,13 +5,7 @@ import { google } from "googleapis";
 import type { UserProviderModel } from "../user";
 
 class GoogleDriveService implements IGoogleDriveService {
-  async createFile(
-    name: string,
-    mimeType: string,
-    data: string,
-    userId: string,
-    { accessToken, refreshToken }: UserProviderModel,
-  ): Promise<IGoogleDriveResponse> {
+  async getAuth({ accessToken, refreshToken }: UserProviderModel): Promise<OAuth2Client> {
     if (!refreshToken) {
       throw new GoogleDriveException("no provider refresh token", 400);
     }
@@ -23,17 +17,36 @@ class GoogleDriveService implements IGoogleDriveService {
     });
     oauthClient.forceRefreshOnFailure = true;
 
-    const tokenInfo = await oauthClient.getTokenInfo(accessToken ?? "").catch((e) => {
-      const { status, data } = e?.response;
+    const tokenInfo = await oauthClient.getTokenInfo(accessToken ?? "").catch(async () => {
+      // renew token
+      const token = await oauthClient.getAccessToken().catch((e) => {
+        const { status, data } = e?.response;
+        throw new GoogleDriveException(data || e, status);
+      });
 
-      throw new GoogleDriveException(data || e, status);
+      oauthClient.setCredentials({
+        access_token: token.token,
+        refresh_token: refreshToken,
+      });
     });
 
-    console.debug(tokenInfo);
+    console.debug("token info", tokenInfo);
+
+    return oauthClient;
+  }
+
+  async createFile(
+    name: string,
+    mimeType: string,
+    data: string,
+    userId: string,
+    provider: UserProviderModel,
+  ): Promise<IGoogleDriveResponse> {
+    const auth = await this.getAuth(provider);
 
     const drive = google.drive({
       version: "v3",
-      auth: oauthClient,
+      auth,
     });
 
     return drive.files

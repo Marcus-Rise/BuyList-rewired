@@ -33,7 +33,11 @@ const handler: NextApiHandler = async (
     .then(({ provider, userId }) =>
       googleDriveService.createFile("test.txt", "text/plain", "Hello world", userId, provider),
     )
-    .then(({ status, data }) => response.status(status).json(data))
+    .then(({ status, data }) => {
+      console.log(data);
+
+      response.status(status).json(data);
+    })
     .catch((error: AbstractException) => {
       console.error(error);
 
