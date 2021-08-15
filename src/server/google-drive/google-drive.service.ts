@@ -1,11 +1,12 @@
 import type { IGoogleDriveResponse, IGoogleDriveService } from "./google-drive.service.interface";
 import { OAuth2Client } from "google-auth-library";
 import { GoogleDriveException } from "./google-drive.exception";
+import type { drive_v3 } from "googleapis";
 import { google } from "googleapis";
 import type { UserProviderModel } from "../user";
 
 class GoogleDriveService implements IGoogleDriveService {
-  async getAuth({ accessToken, refreshToken }: UserProviderModel): Promise<OAuth2Client> {
+  async getApi({ accessToken, refreshToken }: UserProviderModel): Promise<drive_v3.Drive> {
     if (!refreshToken) {
       throw new GoogleDriveException("no provider refresh token", 400);
     }
@@ -32,7 +33,10 @@ class GoogleDriveService implements IGoogleDriveService {
 
     console.debug("token info", tokenInfo);
 
-    return oauthClient;
+    return google.drive({
+      version: "v3",
+      auth: oauthClient,
+    });
   }
 
   async createFile(
@@ -42,14 +46,9 @@ class GoogleDriveService implements IGoogleDriveService {
     userId: string,
     provider: UserProviderModel,
   ): Promise<IGoogleDriveResponse> {
-    const auth = await this.getAuth(provider);
+    const api = await this.getApi(provider);
 
-    const drive = google.drive({
-      version: "v3",
-      auth,
-    });
-
-    return drive.files
+    return api.files
       .create({
         requestBody: {
           name: "test.txt",
