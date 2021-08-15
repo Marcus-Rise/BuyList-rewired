@@ -13,6 +13,14 @@ interface IGoogleDriveService {
     provider: UserProviderModel,
   ): Promise<IGoogleDriveResponse>;
 
+  updateFile(
+    id: string,
+    name: string,
+    mimeType: string,
+    content: string,
+    provider: UserProviderModel,
+  ): Promise<IGoogleDriveResponse>;
+
   fileList(provider: UserProviderModel): Promise<IGoogleDriveResponse>;
 }
 
