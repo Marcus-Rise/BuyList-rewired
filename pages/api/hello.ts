@@ -5,7 +5,7 @@ import { User } from "../../src/server/user";
 import type { AbstractException } from "../../src/server/utils/exception";
 import type { IJsonStorageService } from "../../src/server/json-storage";
 import { JsonStorage } from "../../src/server/json-storage";
-import { userStorageInitInterceptor } from "../../src/server/utils/interceptors";
+import { withUserStorageInitialization } from "../../src/server/utils/interceptors";
 
 const handler: NextApiHandler = async (
   req,
@@ -13,8 +13,8 @@ const handler: NextApiHandler = async (
   userService: IUserService = User,
   jsonStorageService: IJsonStorageService = JsonStorage,
 ) =>
-  userStorageInitInterceptor(req, response)
-    .then(() => jsonStorageService.read(userService.user.jsonStorageId))
+  jsonStorageService
+    .read(userService.user.jsonStorageId)
     .then(response.status(200).json)
     .catch((error: AbstractException) => {
       console.error(error);
@@ -22,4 +22,4 @@ const handler: NextApiHandler = async (
       return response.status(error.code).json(error.errorParsed);
     });
 
-export default withApiAuthRequired(handler);
+export default withApiAuthRequired(withUserStorageInitialization(handler));
