@@ -4,8 +4,7 @@ import { User } from "../../user";
 import type { IJsonStorageService } from "../../json-storage";
 import { JsonStorage } from "../../json-storage";
 import { getSession } from "@auth0/nextjs-auth0";
-
-type NextInterceptor = (handler: NextApiHandler) => NextApiHandler;
+import type { NextInterceptor } from "./interceptor";
 
 const withUserStorageInitialization: NextInterceptor =
   (
