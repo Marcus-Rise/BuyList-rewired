@@ -1,4 +1,4 @@
-import type { IUserGetResponseDto } from "../service/user-get-response.dto";
+import type { IUserGetResponseDto } from "../dto";
 import { UserModel } from "./user.model";
 import { UserProviderModelFactory } from "./user-provider.model.factory";
 

@@ -1,5 +1,5 @@
 import { UserProviderModel } from "./user-provider.model";
-import type { IUserProviderGetResponseDto } from "../service/user-get-response.dto";
+import type { IUserProviderGetResponseDto } from "../dto";
 
 class UserProviderModelFactory {
   static fromGetResponseDto(dto: IUserProviderGetResponseDto): UserProviderModel {

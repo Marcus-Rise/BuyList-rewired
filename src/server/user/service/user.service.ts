@@ -1,6 +1,6 @@
 import { UserModel, UserModelFactory } from "../model";
 import type { IUserService } from "./user.service.interface";
-import type { IUserGetResponseDto } from "./user-get-response.dto";
+import type { IUserGetResponseDto } from "../dto";
 import { UserException } from "./user.exception";
 
 interface IAuth0ApiTokenResponse {
