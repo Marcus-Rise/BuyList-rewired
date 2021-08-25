@@ -30,10 +30,10 @@ class UserService implements IUserService {
     return "error" in res && "error_description" in res;
   }
 
-  async getToken(): Promise<IAuth0ApiTokenResponse> {
+  async getAuthorizationHeader(): Promise<string> {
     const { authUrl, apiUrl, clientSecret, clientId } = this._config;
 
-    return fetch(authUrl, {
+    const { token_type, access_token } = await fetch(authUrl, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
@@ -51,15 +51,43 @@ class UserService implements IUserService {
 
       return data;
     });
+
+    return `${token_type} ${access_token}`;
   }
 
   async load(userId: string): Promise<void> {
     const { apiUrl } = this._config;
-    const { token_type, access_token } = await this.getToken();
+    const authorization = await this.getAuthorizationHeader();
 
     const dto = await fetch(new URL(`${apiUrl}users/${userId}`).toString(), {
       method: "GET",
-      headers: { Authorization: `${token_type} ${access_token}` },
+      headers: { authorization },
+    }).then<IUserGetResponseDto>(async (res) => {
+      const data = await res.json();
+
+      if (this.isAuth0ApiErrorResponse(data)) {
+        throw new UserException(data, res.status);
+      }
+
+      return data;
+    });
+
+    this._user = UserModelFactory.fromGetResponseDto(dto);
+  }
+
+  async saveMetaData(data: IUserMetadataDto): Promise<void> {
+    const { apiUrl } = this._config;
+    const authorization = await this.getAuthorizationHeader();
+
+    const dto = await fetch(new URL(apiUrl + "users/" + this._user.id).toString(), {
+      method: "PATCH",
+      headers: {
+        authorization,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        user_metadata: data,
+      }),
     }).then<IUserGetResponseDto>(async (res) => {
       const data = await res.json();
 
