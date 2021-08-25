@@ -6,7 +6,7 @@ class UserDtoFactory {
     const dto = new UserDto();
 
     dto.user_metadata = {
-      json_storage: model.jsonStorageUrl,
+      json_storage: model.jsonStorageId,
     };
 
     return dto;

@@ -21,6 +21,12 @@ class UserService implements IUserService {
 
     this._user = user;
   }
+
+  async saveJsonStorageId(id: string): Promise<void> {
+    this._user.jsonStorageId = id;
+
+    this._user = await this._repo.save(this._user);
+  }
 }
 
 export { UserService };
