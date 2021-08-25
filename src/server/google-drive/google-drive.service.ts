@@ -4,6 +4,10 @@ import { GoogleDriveException } from "./google-drive.exception";
 import type { drive_v3 } from "googleapis";
 import { google } from "googleapis";
 import type { UserProviderModel } from "../user";
+import path from "path";
+import * as os from "os";
+import * as fs from "fs";
+import { v4 as uuid } from "uuid";
 
 class GoogleDriveService implements IGoogleDriveService {
   async getApi({ accessToken, refreshToken }: UserProviderModel): Promise<drive_v3.Drive> {
@@ -91,6 +95,43 @@ class GoogleDriveService implements IGoogleDriveService {
     });
 
     return { status, data };
+  }
+
+  async readFile(id: string, provider: UserProviderModel): Promise<string> {
+    const api = await this.getApi(provider);
+    const file = await api.files.get({ fileId: id, alt: "media" }, { responseType: "stream" });
+
+    interface ReadFileError {
+      code: number;
+      text: string;
+    }
+
+    return new Promise<string>((resolve, reject) => {
+      const filePath = path.join(os.tmpdir(), uuid());
+      const dest = fs.createWriteStream(filePath);
+
+      file.data
+        .on("end", () => {
+          fs.readFile(filePath, "utf8", (err, data) => {
+            if (err) {
+              const error: ReadFileError = {
+                code: err.code ? Number(err.code) : 500,
+                text: err.message,
+              };
+              reject(error);
+            } else {
+              resolve(data);
+            }
+          });
+        })
+        .on("error", (err: { message: string }) => {
+          const error: ReadFileError = { code: 500, text: err.message };
+          reject(error);
+        })
+        .pipe(dest);
+    }).catch((e: ReadFileError) => {
+      throw new GoogleDriveException(e.text ?? e, e.code);
+    });
   }
 }
 
