@@ -1,7 +1,8 @@
 import { UserModel, UserModelFactory } from "../model";
 import type { IUserService } from "./user.service.interface";
-import type { IUserGetResponseDto } from "../dto";
+import type { IUserGetResponseDto, IUserMetadataDto } from "../dto";
 import { UserException } from "./user.exception";
+import type { IUserConfig } from "../config";
 
 interface IAuth0ApiTokenResponse {
   access_token: string;
@@ -15,11 +16,7 @@ interface IAuth0ApiErrorResponse {
 }
 
 class UserService implements IUserService {
-  constructor(
-    private readonly _tenant = process.env.AUTH0_ISSUER_BASE_URL,
-    private readonly _clientId = process.env.AUTH0_CLIENT_ID,
-    private readonly _clientSecret = process.env.AUTH0_CLIENT_SECRET,
-  ) {}
+  constructor(private readonly _config: IUserConfig) {}
 
   private _user: UserModel = new UserModel();
 
@@ -34,14 +31,14 @@ class UserService implements IUserService {
   }
 
   async getToken(): Promise<IAuth0ApiTokenResponse> {
-    const apiUrl = new URL("/api/v2/", this._tenant);
+    const { authUrl, apiUrl, clientSecret, clientId } = this._config;
 
-    return fetch(new URL("/oauth/token", this._tenant).toString(), {
+    return fetch(authUrl, {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
-        client_id: this._clientId,
-        client_secret: this._clientSecret,
+        client_id: clientId,
+        client_secret: clientSecret,
         audience: apiUrl,
         grant_type: "client_credentials",
       }),
@@ -57,8 +54,7 @@ class UserService implements IUserService {
   }
 
   async load(userId: string): Promise<void> {
-    const apiUrl = new URL("/api/v2/", this._tenant);
-
+    const { apiUrl } = this._config;
     const { token_type, access_token } = await this.getToken();
 
     const dto = await fetch(new URL(`${apiUrl}users/${userId}`).toString(), {

@@ -1,16 +1,13 @@
 import type { NextApiHandler } from "next";
 import { getSession, withApiAuthRequired } from "@auth0/nextjs-auth0";
 import type { IUserService } from "../../src/server/user";
-import { UserException, UserService } from "../../src/server/user";
-import type { IGoogleDriveService } from "../../src/server/google-drive";
-import { GoogleDriveService } from "../../src/server/google-drive";
+import { UserConfig, UserService } from "../../src/server/user";
 import type { AbstractException } from "../../src/server/utils/exception";
 
 const handler: NextApiHandler = async (
   req,
   response,
-  userService: IUserService = new UserService(),
-  googleDriveService: IGoogleDriveService = new GoogleDriveService(),
+  userService: IUserService = new UserService(new UserConfig()),
 ) => {
   const session = getSession(req, response);
 
@@ -20,24 +17,7 @@ const handler: NextApiHandler = async (
 
   return userService
     .load(session.user.sub)
-    .then(() => {
-      const { googleProvider } = userService.user;
-
-      if (!googleProvider) {
-        throw new UserException("provider not found", 404);
-      }
-
-      return googleProvider;
-    })
-    .then((provider) =>
-      // googleDriveService.createFile("test.txt", "text/plain", "Hello world", provider),
-      googleDriveService.fileList(provider),
-    )
-    .then(({ status, data }) => {
-      console.debug(data);
-
-      response.status(status).json(data);
-    })
+    .then(() => response.status(200).json(userService.user))
     .catch((error: AbstractException) => {
       console.error(error);
 
