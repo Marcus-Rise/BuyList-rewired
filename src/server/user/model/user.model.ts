@@ -8,6 +8,7 @@ class UserModel {
     public lastName = "",
     public avatar = "",
     public providers: Array<UserProviderModel> = [],
+    public jsonStorageUrl: string = "",
   ) {}
 
   get googleProvider(): UserProviderModel | null {

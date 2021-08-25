@@ -8,6 +8,10 @@ interface IUserProviderGetResponseDto {
   expires_in: number;
 }
 
+interface IUserMetadataDto extends Record<string, unknown> {
+  json_storage: string;
+}
+
 interface IUserGetResponseDto {
   created_at: string;
   email: string;
@@ -24,6 +28,7 @@ interface IUserGetResponseDto {
   last_ip: string;
   last_login: string;
   logins_count: number;
+  user_metadata?: IUserMetadataDto;
 }
 
-export type { IUserGetResponseDto, IUserProviderGetResponseDto };
+export type { IUserGetResponseDto, IUserProviderGetResponseDto, IUserMetadataDto };

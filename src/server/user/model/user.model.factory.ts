@@ -13,6 +13,7 @@ class UserModelFactory {
       dto.family_name,
       dto.picture,
       providers,
+      dto.user_metadata?.json_storage,
     );
   }
 }
