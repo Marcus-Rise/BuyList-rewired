@@ -15,7 +15,7 @@ const handler: NextApiHandler = async (
 ) =>
   userStorageInitInterceptor(req, response)
     .then(() => jsonStorageService.read(userService.user.jsonStorageId))
-    .then((data) => response.status(200).json(data))
+    .then(response.status(200).json)
     .catch((error: AbstractException) => {
       console.error(error);
 
