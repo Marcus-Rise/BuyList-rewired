@@ -1,9 +1,9 @@
-import type { IUserGetResponseDto } from "../dto";
+import type { IUserDto } from "../repository";
 import { UserModel } from "./user.model";
 import { UserProviderModelFactory } from "./user-provider.model.factory";
 
 class UserModelFactory {
-  static fromGetResponseDto(dto: IUserGetResponseDto): UserModel {
+  static fromGetResponseDto(dto: IUserDto): UserModel {
     const providers = dto.identities.map((i) => UserProviderModelFactory.fromGetResponseDto(i));
 
     return new UserModel(

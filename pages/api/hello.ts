@@ -1,13 +1,15 @@
 import type { NextApiHandler } from "next";
 import { getSession, withApiAuthRequired } from "@auth0/nextjs-auth0";
 import type { IUserService } from "../../src/server/user";
-import { UserConfig, UserService } from "../../src/server/user";
 import type { AbstractException } from "../../src/server/utils/exception";
+import { UserRepository } from "../../src/server/user/repository";
+import { UserService } from "../../src/server/user/service";
+import { UserConfig } from "../../src/server/user/config";
 
 const handler: NextApiHandler = async (
   req,
   response,
-  userService: IUserService = new UserService(new UserConfig()),
+  userService: IUserService = new UserService(new UserRepository(new UserConfig())),
 ) => {
   const session = getSession(req, response);
 
