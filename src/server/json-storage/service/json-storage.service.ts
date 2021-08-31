@@ -36,7 +36,7 @@ class JsonStorageService implements IJsonStorageService {
     return uri.split("/").slice(-1)[0];
   }
 
-  async read<T extends Record<string, unknown>>(id: string): Promise<T> {
+  async read<T = Record<string, unknown>>(id: string): Promise<T> {
     const { apiUrl } = this._config;
 
     return fetch(apiUrl + "/" + id).then(async ({ json }) => {
@@ -50,7 +50,7 @@ class JsonStorageService implements IJsonStorageService {
     });
   }
 
-  async update<T extends Record<string, unknown>>(id: string, data: T): Promise<void> {
+  async update<T = Record<string, unknown>>(id: string, data: T): Promise<void> {
     const { apiUrl } = this._config;
 
     return fetch(apiUrl + "/" + id, {
