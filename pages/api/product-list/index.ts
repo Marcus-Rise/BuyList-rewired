@@ -12,9 +12,11 @@ class Handler implements IHandler {
   constructor(@inject(PRODUCT_LIST_SERVICE) private readonly _productList: IProductListService) {}
 
   async handle(req: NextApiRequest, res: NextApiResponse) {
-    const items = await this._productList.getAll();
+    if (req.method === "GET") {
+      const items = await this._productList.getAll();
 
-    res.status(200).json(items);
+      res.status(200).json(items);
+    }
   }
 }
 
