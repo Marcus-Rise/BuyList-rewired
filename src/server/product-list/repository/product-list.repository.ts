@@ -57,17 +57,13 @@ class ProductListRepository implements IProductListRepository {
         domain,
         ...items.slice(alreadyExistsItemIndex + 1),
       ];
-
-      await this._jsonStorage.update<IProductListJsonDto>(jsonStorageId, {
-        items: itemsNew,
-      });
     } else {
       itemsNew = [domain, ...items];
-
-      await this._jsonStorage.update<IProductListJsonDto>(jsonStorageId, {
-        items: itemsNew,
-      });
     }
+
+    await this._jsonStorage.update<IProductListJsonDto>(jsonStorageId, {
+      items: itemsNew,
+    });
 
     return itemsNew;
   }
