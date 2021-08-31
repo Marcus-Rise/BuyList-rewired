@@ -26,8 +26,8 @@ class JsonStorageService implements IJsonStorageService {
       headers: {
         "Content-Type": "application/json",
       },
-    }).then<{ uri: string }>(async ({ json }) => {
-      const data = await json();
+    }).then<{ uri: string }>(async (res) => {
+      const data = await res.json();
 
       if (JsonStorageService.isError(data)) {
         throw new JsonStorageException(data.title, data.status);
