@@ -12,10 +12,17 @@ class Handler implements IHandler {
   constructor(@inject(PRODUCT_LIST_SERVICE) private readonly _productList: IProductListService) {}
 
   async handle(req: NextApiRequest, res: NextApiResponse) {
-    if (req.method === "GET") {
-      const items = await this._productList.getAll();
+    switch (req.method) {
+      case "GET": {
+        const items = await this._productList.getAll();
 
-      res.status(200).json(items);
+        res.status(200).json(items);
+        break;
+      }
+      default: {
+        res.status(400).json("Method not allowed");
+        break;
+      }
     }
   }
 }
