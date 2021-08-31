@@ -14,17 +14,27 @@ class Handler implements IHandler {
   async handle(req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
       case "GET": {
-        const items = await this._productList.getAll();
+        const item = await this._productList.getById(String(req.query.id));
 
-        res.status(200).json(items);
+        if (item) {
+          res.status(200).json(item);
+        } else {
+          res.status(404).json("list not found");
+        }
         break;
       }
-      case "POST": {
+      case "PUT": {
         const dto = req.body;
         await this._productList.save(dto);
 
-        res.status(200).json("created");
+        res.status(200).json("updated");
 
+        break;
+      }
+      case "DELETE": {
+        await this._productList.deleteById(String(req.query.id));
+
+        res.status(200).json("deleted");
         break;
       }
       default: {

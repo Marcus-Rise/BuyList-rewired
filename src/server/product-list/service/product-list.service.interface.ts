@@ -6,6 +6,8 @@ interface IProductListService {
   getAll(): Promise<IProductList[]>;
 
   getById(id: string): Promise<IProductList | null>;
+
+  deleteById(id: string): Promise<void>;
 }
 
 export type { IProductListService };

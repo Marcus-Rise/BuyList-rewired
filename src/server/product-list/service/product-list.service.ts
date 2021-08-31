@@ -19,6 +19,14 @@ class ProductListService implements IProductListService {
   async getById(id: string): Promise<IProductList | null> {
     return this._repo.find({ id });
   }
+
+  async deleteById(id: string): Promise<void> {
+    const item = await this.getById(id);
+
+    if (item) {
+      await this._repo.remove(item);
+    }
+  }
 }
 
 export { ProductListService };
