@@ -1,14 +1,14 @@
 import { inject, injectable } from "inversify";
-import type { IUserService } from "../../user";
-import { USER_SERVICE } from "../../user";
-import type { IJsonStorageService } from "../../json-storage";
-import { JSON_STORAGE_SERVICE } from "../../json-storage";
+import type { IUserService } from "./index";
+import { USER_SERVICE } from "./index";
+import type { IJsonStorageService } from "../json-storage";
+import { JSON_STORAGE_SERVICE } from "../json-storage";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "@auth0/nextjs-auth0";
-import type { IProductListJsonDto } from "../../../common";
-import type { IHandler } from "../handler";
-import { nextHandlerFactory } from "../handler";
-import type { Interceptor } from "./interceptor";
+import type { IProductListJsonDto } from "../../common";
+import type { IHandler } from "../utils/handler";
+import { nextHandlerFactory } from "../utils/handler";
+import type { Interceptor } from "../utils/interceptor";
 
 @injectable()
 class UserJsonStorageHandler implements IHandler {
