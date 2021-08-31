@@ -29,7 +29,7 @@ class ProductListRepository implements IProductListRepository {
 
     const { items } = await this._jsonStorage.read<IProductListJsonDto>(jsonStorageId);
 
-    return items.filter((i) => i.id === query?.id);
+    return !!query ? items.filter((i) => i.id === query?.id) : items;
   }
 
   async remove(domain: IProductList): Promise<void> {
