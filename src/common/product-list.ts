@@ -18,5 +18,9 @@ interface IProductList {
   lastEditedDate: Date;
 }
 
+interface IProductListJsonDto {
+  items: Array<IProductList>;
+}
+
 export { ProductPriorityEnum };
-export type { IProduct, IProductList };
+export type { IProduct, IProductList, IProductListJsonDto };

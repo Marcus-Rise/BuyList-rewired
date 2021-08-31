@@ -1,16 +1,16 @@
-import type { NextInterceptor } from "./interceptor";
+import type { Interceptor } from "./interceptor";
 import { AbstractException } from "../exception";
 
-const withErrorHandle: NextInterceptor = (handler) => async (req, res) => {
+const withErrorHandle: Interceptor = (handler) => async (req, res) => {
   try {
     await handler(req, res);
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
 
     if (error instanceof AbstractException) {
       return res.status(error.code).json(error.errorParsed);
     } else {
-      return res.send(error);
+      return res.status(500).json(error?.message);
     }
   }
 };

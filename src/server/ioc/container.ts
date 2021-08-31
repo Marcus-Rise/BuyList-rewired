@@ -1,4 +1,3 @@
-import "reflect-metadata";
 import { Container } from "inversify";
 import { UserModule } from "../user";
 import { JsonStorageModule } from "../json-storage";

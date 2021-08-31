@@ -42,8 +42,8 @@ class JsonStorageService implements IJsonStorageService {
   async read<T = Record<string, unknown>>(id: string): Promise<T> {
     const { apiUrl } = this._config;
 
-    return fetch(apiUrl + "/" + id).then(async ({ json }) => {
-      const data = await json();
+    return fetch(apiUrl + "/" + id).then(async (res) => {
+      const data = await res.json();
 
       if (JsonStorageService.isError(data)) {
         throw new JsonStorageException(data.title, data.status);

@@ -1,4 +1,4 @@
-import type { IProductList } from "../../../common";
+import type { IProductList, IProductListJsonDto } from "../../../common";
 import type {
   IProductListRepository,
   IProductListRepositoryQuery,
@@ -8,10 +8,6 @@ import { JSON_STORAGE_SERVICE } from "../../json-storage";
 import type { IUserService } from "../../user";
 import { USER_SERVICE } from "../../user";
 import { inject, injectable } from "inversify";
-
-interface IProductListJsonDto {
-  items: Array<IProductList>;
-}
 
 @injectable()
 class ProductListRepository implements IProductListRepository {

@@ -8,7 +8,9 @@ import path from "path";
 import * as os from "os";
 import * as fs from "fs";
 import { v4 as uuid } from "uuid";
+import { injectable } from "inversify";
 
+@injectable()
 class GoogleDriveService implements IGoogleDriveService {
   async getApi({ accessToken, refreshToken }: UserProviderModel): Promise<drive_v3.Drive> {
     if (!refreshToken) {
