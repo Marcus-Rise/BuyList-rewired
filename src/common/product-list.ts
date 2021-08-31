@@ -12,10 +12,10 @@ interface IProduct {
 }
 
 interface IProductList {
-  title: string;
-  items: IProduct[];
   id: string;
+  title: string;
   lastEditedDate: Date;
+  items: IProduct[];
 }
 
 interface IProductListJsonDto {
