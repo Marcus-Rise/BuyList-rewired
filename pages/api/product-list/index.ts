@@ -19,6 +19,14 @@ class Handler implements IHandler {
         res.status(200).json(items);
         break;
       }
+      case "POST": {
+        const dto = req.body;
+        await this._productList.save(dto);
+
+        res.status(200).json({});
+
+        break;
+      }
       default: {
         res.status(400).json("Method not allowed");
         break;
