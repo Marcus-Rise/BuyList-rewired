@@ -9,7 +9,13 @@ class ProductListService implements IProductListService {
   constructor(@inject(PRODUCT_LIST_REPOSITORY) private readonly _repo: IProductListRepository) {}
 
   async merge(id: string, list: IProductList): Promise<IProductList> {
-    throw new Error("Method not implemented.");
+    const item = await this._repo.find({ id });
+
+    if (!item) {
+      await this._repo.save(list);
+    }
+
+    return item ?? list;
   }
 
   async getAll(): Promise<IProductList[]> {
