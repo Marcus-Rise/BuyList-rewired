@@ -1,9 +1,5 @@
-import type { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-
-interface IHandler<T = unknown> {
-  handle(req: NextApiRequest, res: NextApiResponse<T>): void | Promise<void>;
-}
+import type { NextApiHandler } from "next";
 
 type Interceptor = (handler: NextApiHandler) => NextApiHandler;
 
-export type { IHandler, Interceptor };
+export type { Interceptor };
