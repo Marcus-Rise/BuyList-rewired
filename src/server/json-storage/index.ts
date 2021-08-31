@@ -1,8 +1,3 @@
-import { JsonStorageService } from "./service";
-import { JsonStorageConfig } from "./config";
-
 export type { IJsonStorageService } from "./service";
-
-const JsonStorage = new JsonStorageService(new JsonStorageConfig());
-
-export { JsonStorage };
+export { JSON_STORAGE_SERVICE } from "./service";
+export * from "./ioc";

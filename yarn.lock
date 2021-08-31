@@ -68,6 +68,13 @@
     jsesc "^2.5.1"
     source-map "^0.5.0"
 
+"@babel/helper-annotate-as-pure@^7.14.5":
+  version "7.14.5"
+  resolved "https://registry.yarnpkg.com/@babel/helper-annotate-as-pure/-/helper-annotate-as-pure-7.14.5.tgz#7bf478ec3b71726d56a8ca5775b046fc29879e61"
+  integrity sha512-EivH9EgBIb+G8ij1B2jAwSH36WnGvkQSEC6CkX/6v6ZFlw5fVOHvsgGF4uiEHO2GzMvunZb6tDLQEQSdrdocrA==
+  dependencies:
+    "@babel/types" "^7.14.5"
+
 "@babel/helper-compilation-targets@^7.15.0":
   version "7.15.0"
   resolved "https://registry.yarnpkg.com/@babel/helper-compilation-targets/-/helper-compilation-targets-7.15.0.tgz#973df8cbd025515f3ff25db0c05efc704fa79818"
@@ -77,6 +84,18 @@
     "@babel/helper-validator-option" "^7.14.5"
     browserslist "^4.16.6"
     semver "^6.3.0"
+
+"@babel/helper-create-class-features-plugin@^7.14.5":
+  version "7.15.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-create-class-features-plugin/-/helper-create-class-features-plugin-7.15.0.tgz#c9a137a4d137b2d0e2c649acf536d7ba1a76c0f7"
+  integrity sha512-MdmDXgvTIi4heDVX/e9EFfeGpugqm9fobBVg/iioE8kueXrOHdRDe36FAY7SnE9xXLVeYCoJR/gdrBEIHRC83Q==
+  dependencies:
+    "@babel/helper-annotate-as-pure" "^7.14.5"
+    "@babel/helper-function-name" "^7.14.5"
+    "@babel/helper-member-expression-to-functions" "^7.15.0"
+    "@babel/helper-optimise-call-expression" "^7.14.5"
+    "@babel/helper-replace-supers" "^7.15.0"
+    "@babel/helper-split-export-declaration" "^7.14.5"
 
 "@babel/helper-function-name@^7.14.5":
   version "7.14.5"
@@ -198,6 +217,15 @@
   resolved "https://registry.yarnpkg.com/@babel/parser/-/parser-7.15.3.tgz#3416d9bea748052cfcb63dbcc27368105b1ed862"
   integrity sha512-O0L6v/HvqbdJawj0iBEfVQMc3/6WP+AeOsovsIgBFyJaG+W2w7eqvZB7puddATmWuARlm1SX7DwxJ/JJUnDpEA==
 
+"@babel/plugin-proposal-decorators@^7.14.5":
+  version "7.14.5"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-proposal-decorators/-/plugin-proposal-decorators-7.14.5.tgz#59bc4dfc1d665b5a6749cf798ff42297ed1b2c1d"
+  integrity sha512-LYz5nvQcvYeRVjui1Ykn28i+3aUiXwQ/3MGoEy0InTaz1pJo/lAzmIDXX+BQny/oufgHzJ6vnEEiXQ8KZjEVFg==
+  dependencies:
+    "@babel/helper-create-class-features-plugin" "^7.14.5"
+    "@babel/helper-plugin-utils" "^7.14.5"
+    "@babel/plugin-syntax-decorators" "^7.14.5"
+
 "@babel/plugin-syntax-async-generators@^7.8.4":
   version "7.8.4"
   resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-async-generators/-/plugin-syntax-async-generators-7.8.4.tgz#a983fb1aeb2ec3f6ed042a210f640e90e786fe0d"
@@ -218,6 +246,13 @@
   integrity sha512-fm4idjKla0YahUNgFNLCB0qySdsoPiZP3iQE3rky0mBUtMZ23yDJ9SJdg6dXTSDnulOVqiF3Hgr9nbXvXTQZYA==
   dependencies:
     "@babel/helper-plugin-utils" "^7.12.13"
+
+"@babel/plugin-syntax-decorators@^7.14.5":
+  version "7.14.5"
+  resolved "https://registry.yarnpkg.com/@babel/plugin-syntax-decorators/-/plugin-syntax-decorators-7.14.5.tgz#eafb9c0cbe09c8afeb964ba3a7bbd63945a72f20"
+  integrity sha512-c4sZMRWL4GSvP1EXy0woIP7m4jkVcEuG8R1TOZxPBPtp4FSM/kiPZub9UIs/Jrb5ZAOzvTUSGYrWsrSu1JvoPw==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.14.5"
 
 "@babel/plugin-syntax-import-meta@^7.8.3":
   version "7.10.4"
@@ -849,6 +884,11 @@
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.1.tgz#20f18294f797f2209b5f65c8e3b5c8e8261d127c"
   integrity sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==
 
+"@types/uuid@^8.3.1":
+  version "8.3.1"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.1.tgz#1a32969cf8f0364b3d8c8af9cc3555b7805df14f"
+  integrity sha512-Y2mHTRAbqfFkpjldbkHGY8JIzRN6XqYRliG8/24FcHm2D2PwW24fl5xMRTVGdrb7iMrwCaIEbLWerGIkXuFWVg==
+
 "@types/yargs-parser@*":
   version "20.2.1"
   resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-20.2.1.tgz#3b9ce2489919d9e4fea439b76916abc34b2df129"
@@ -1207,10 +1247,22 @@ babel-plugin-jest-hoist@^27.0.6:
     "@types/babel__core" "^7.0.0"
     "@types/babel__traverse" "^7.0.6"
 
+babel-plugin-parameter-decorator@^1.0.16:
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/babel-plugin-parameter-decorator/-/babel-plugin-parameter-decorator-1.0.16.tgz#1c889c3a1f3bbf03801fcbc2e95b8bae7468df3f"
+  integrity sha512-yUT2WPTUg1JaPmRGRSF557m1HJ9vdFQInRWOkiOyO5a9HhqlXffJu+fQ2xd5+qU/35ICMrrk9eWKsHCairKA9w==
+
 babel-plugin-syntax-jsx@6.18.0:
   version "6.18.0"
   resolved "https://registry.yarnpkg.com/babel-plugin-syntax-jsx/-/babel-plugin-syntax-jsx-6.18.0.tgz#0af32a9a6e13ca7a3fd5069e62d7b0f58d0d8946"
   integrity sha1-CvMqmm4Tyno/1QaeYtew9Y0NiUY=
+
+babel-plugin-transform-typescript-metadata@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-typescript-metadata/-/babel-plugin-transform-typescript-metadata-0.3.2.tgz#7a327842d8c36ffe07ee1b5276434e56c297c9b7"
+  integrity sha512-mWEvCQTgXQf48yDqgN7CH50waTyYBeP2Lpqx4nNWab9sxEpdXVeKgfj1qYI2/TgUPQtNFZ85i3PemRtnXVYYJg==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.0.0"
 
 babel-preset-current-node-syntax@^1.0.0:
   version "1.0.1"
@@ -2937,6 +2989,11 @@ internal-slot@^1.0.3:
     get-intrinsic "^1.1.0"
     has "^1.0.3"
     side-channel "^1.0.4"
+
+inversify@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/inversify/-/inversify-5.1.1.tgz#6fbd668c591337404e005a1946bfe0d802c08730"
+  integrity sha512-j8grHGDzv1v+8T1sAQ+3boTCntFPfvxLCkNcxB1J8qA0lUN+fAlSyYd+RXKvaPRL4AGyPxViutBEJHNXOyUdFQ==
 
 is-arguments@^1.0.4:
   version "1.1.1"
@@ -4715,6 +4772,11 @@ readdirp@~3.5.0:
   dependencies:
     picomatch "^2.2.1"
 
+reflect-metadata@^0.1.13:
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
+  integrity sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
+
 regenerator-runtime@^0.13.4:
   version "0.13.9"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.9.tgz#8925742a98ffd90814988d7566ad30ca3b263b52"
@@ -5507,7 +5569,7 @@ util@^0.12.0:
     safe-buffer "^5.1.2"
     which-typed-array "^1.1.2"
 
-uuid@^8.0.0:
+uuid@^8.0.0, uuid@^8.3.2:
   version "8.3.2"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==

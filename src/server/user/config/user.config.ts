@@ -1,5 +1,7 @@
 import type { IUserConfig } from "./user.config.interface";
+import { injectable } from "inversify";
 
+@injectable()
 class UserConfig implements IUserConfig {
   constructor(
     private readonly _tenant = process.env.AUTH0_ISSUER_BASE_URL,

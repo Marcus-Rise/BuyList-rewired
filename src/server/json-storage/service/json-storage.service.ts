@@ -1,14 +1,17 @@
 import type { IJsonStorageService } from "./json-storage.service.interface";
 import type { IJsonStorageConfig } from "../config";
+import { JSON_STORAGE_CONFIG } from "../config";
 import { JsonStorageException } from "../json-storage.exception";
+import { inject, injectable } from "inversify";
 
 interface IJsonStorageError {
   status: number;
   title: string;
 }
 
+@injectable()
 class JsonStorageService implements IJsonStorageService {
-  constructor(private readonly _config: IJsonStorageConfig) {}
+  constructor(@inject(JSON_STORAGE_CONFIG) private readonly _config: IJsonStorageConfig) {}
 
   static isError(obj: unknown): obj is IJsonStorageError {
     return typeof obj === "object" && obj !== null && "status" in obj && "title" in obj;

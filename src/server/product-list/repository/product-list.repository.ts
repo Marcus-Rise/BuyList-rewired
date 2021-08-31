@@ -4,16 +4,20 @@ import type {
   IProductListRepositoryQuery,
 } from "./product-list.repository.interface";
 import type { IJsonStorageService } from "../../json-storage";
+import { JSON_STORAGE_SERVICE } from "../../json-storage";
 import type { IUserService } from "../../user";
+import { USER_SERVICE } from "../../user";
+import { inject, injectable } from "inversify";
 
 interface IProductListJsonDto {
   items: Array<IProductList>;
 }
 
+@injectable()
 class ProductListRepository implements IProductListRepository {
   constructor(
-    private readonly _user: IUserService,
-    private readonly _jsonStorage: IJsonStorageService,
+    @inject(USER_SERVICE) private readonly _user: IUserService,
+    @inject(JSON_STORAGE_SERVICE) private readonly _jsonStorage: IJsonStorageService,
   ) {}
 
   async find(query?: Partial<IProductListRepositoryQuery>): Promise<IProductList | null> {

@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import type { IProductListJsonDto } from "./product-list.repository";
 import { ProductListRepository } from "./product-list.repository";
 import { mock } from "jest-mock-extended";

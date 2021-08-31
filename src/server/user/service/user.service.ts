@@ -2,9 +2,12 @@ import { UserModel } from "../model";
 import type { IUserService } from "./user.service.interface";
 import { UserException } from "./user.exception";
 import type { IUserRepository } from "../repository";
+import { USER_REPOSITORY } from "../repository";
+import { inject, injectable } from "inversify";
 
+@injectable()
 class UserService implements IUserService {
-  constructor(private readonly _repo: IUserRepository) {}
+  constructor(@inject(USER_REPOSITORY) private readonly _repo: IUserRepository) {}
 
   private _user: UserModel = new UserModel();
 
