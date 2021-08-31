@@ -57,13 +57,13 @@ class JsonStorageService implements IJsonStorageService {
     const { apiUrl } = this._config;
 
     return fetch(apiUrl + "/" + id, {
-      method: "POST",
+      method: "PUT",
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
-    }).then(async ({ json }) => {
-      const data = await json();
+    }).then(async (res) => {
+      const data = await res.json();
 
       if (JsonStorageService.isError(data)) {
         throw new JsonStorageException(data.title, data.status);
