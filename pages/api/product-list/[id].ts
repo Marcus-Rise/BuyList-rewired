@@ -23,6 +23,12 @@ class Handler implements IHandler {
         }
         break;
       }
+      case "POST": {
+        const merged = await this._productList.merge(String(req.query.id), req.body);
+
+        res.status(200).json(merged);
+        break;
+      }
       case "PUT": {
         const dto = req.body;
         await this._productList.save(dto);
