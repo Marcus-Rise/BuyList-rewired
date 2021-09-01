@@ -6,12 +6,12 @@ import { JSON_STORAGE_SERVICE } from "../../json-storage";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "@auth0/nextjs-auth0";
 import type { IProductListJsonDto } from "../../../common";
-import type { IHandler } from "../handler";
+import type { IController } from "../handler";
 import { nextHandlerFactory } from "../handler";
 import type { Interceptor } from "./index";
 
 @injectable()
-class UserJsonStorageHandler implements IHandler {
+class UserJsonStorageController implements IController {
   constructor(
     @inject(USER_SERVICE) private readonly _user: IUserService,
     @inject(JSON_STORAGE_SERVICE) private readonly _jsonStorage: IJsonStorageService,
@@ -34,7 +34,7 @@ class UserJsonStorageHandler implements IHandler {
   }
 }
 
-const userJsonStorageHandler = nextHandlerFactory(UserJsonStorageHandler);
+const userJsonStorageHandler = nextHandlerFactory(UserJsonStorageController);
 
 const userJsonStorageInterceptor: Interceptor = (handler) => async (req, res) => {
   await userJsonStorageHandler(req, res);

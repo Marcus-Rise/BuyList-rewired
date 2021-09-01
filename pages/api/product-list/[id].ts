@@ -3,12 +3,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { inject, injectable } from "inversify";
 import type { IProductListService } from "../../../src/server/product-list";
 import { PRODUCT_LIST_SERVICE } from "../../../src/server/product-list";
-import type { IHandler } from "../../../src/server/utils/handler";
+import type { IController } from "../../../src/server/utils/handler";
 import { nextHandlerFactory } from "../../../src/server/utils/handler";
 import { withBaseInterceptor } from "../../../src/server/utils/interceptor";
 
 @injectable()
-class Handler implements IHandler {
+class Controller implements IController {
   constructor(@inject(PRODUCT_LIST_SERVICE) private readonly _productList: IProductListService) {}
 
   async handle(req: NextApiRequest, res: NextApiResponse) {
@@ -66,6 +66,6 @@ class Handler implements IHandler {
   }
 }
 
-const handler = nextHandlerFactory(Handler);
+const handler = nextHandlerFactory(Controller);
 
 export default withBaseInterceptor(handler);

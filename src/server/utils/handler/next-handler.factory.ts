@@ -1,11 +1,11 @@
 import { container } from "../../ioc";
 import type { NextApiHandler } from "next";
-import type { IHandler } from "./handler";
+import type { IController } from "./controller";
 
-const nextHandlerFactory = (constructor: new (...args: any[]) => IHandler): NextApiHandler => {
-  const handler = container.resolve(constructor);
+const nextHandlerFactory = (constructor: new (...args: any[]) => IController): NextApiHandler => {
+  const controller = container.resolve(constructor);
 
-  return (req, res) => handler.handle(req, res);
+  return (req, res) => controller.handle(req, res);
 };
 
 export { nextHandlerFactory };

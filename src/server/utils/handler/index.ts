@@ -1,2 +1,2 @@
-export * from "./handler";
+export * from "./controller";
 export * from "./next-handler.factory";
