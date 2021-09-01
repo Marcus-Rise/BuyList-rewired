@@ -8,8 +8,6 @@ interface IProductListService {
   getById(id: string): Promise<IProductList | null>;
 
   deleteById(id: string): Promise<void>;
-
-  merge(id: string, list: IProductList): Promise<IProductList>;
 }
 
 export type { IProductListService };

@@ -17,10 +17,6 @@ class Controller implements IController {
         await this.get(req, res);
         break;
       }
-      case "POST": {
-        await this.merge(req, res);
-        break;
-      }
       case "PUT": {
         await this.change(req, res);
         break;
@@ -44,12 +40,6 @@ class Controller implements IController {
     } else {
       res.status(404).json("list not found");
     }
-  }
-
-  async merge(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    const merged = await this._productList.merge(String(req.query.id), req.body);
-
-    res.status(200).json(merged);
   }
 
   async change(req: NextApiRequest, res: NextApiResponse): Promise<void> {

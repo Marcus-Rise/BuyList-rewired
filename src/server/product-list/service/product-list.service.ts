@@ -8,16 +8,6 @@ import { inject, injectable } from "inversify";
 class ProductListService implements IProductListService {
   constructor(@inject(PRODUCT_LIST_REPOSITORY) private readonly _repo: IProductListRepository) {}
 
-  async merge(id: string, list: IProductList): Promise<IProductList> {
-    const item = await this._repo.find({ id });
-
-    if (!item) {
-      await this._repo.save(list);
-    }
-
-    return item ?? list;
-  }
-
   async getAll(): Promise<IProductList[]> {
     return this._repo.list();
   }
