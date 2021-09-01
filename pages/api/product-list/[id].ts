@@ -18,11 +18,11 @@ class Controller implements IController {
         break;
       }
       case "POST": {
-        await this.post(req, res);
+        await this.merge(req, res);
         break;
       }
       case "PUT": {
-        await this.put(req, res);
+        await this.change(req, res);
         break;
       }
       case "DELETE": {
@@ -46,13 +46,13 @@ class Controller implements IController {
     }
   }
 
-  async post(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  async merge(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     const merged = await this._productList.merge(String(req.query.id), req.body);
 
     res.status(200).json(merged);
   }
 
-  async put(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+  async change(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     const dto = req.body;
     await this._productList.save(dto);
 
