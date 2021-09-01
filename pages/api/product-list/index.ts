@@ -14,17 +14,11 @@ class Handler implements IHandler {
   async handle(req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
       case "GET": {
-        const items = await this._productList.getAll();
-
-        res.status(200).json(items);
+        await this.get(res);
         break;
       }
       case "POST": {
-        const dto = req.body;
-        await this._productList.save(dto);
-
-        res.status(200).json("created");
-
+        await this.post(req, res);
         break;
       }
       default: {
@@ -32,6 +26,19 @@ class Handler implements IHandler {
         break;
       }
     }
+  }
+
+  async post(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+    const dto = req.body;
+    await this._productList.save(dto);
+
+    res.status(200).json("created");
+  }
+
+  async get(res: NextApiResponse): Promise<void> {
+    const items = await this._productList.getAll();
+
+    res.status(200).json(items);
   }
 }
 

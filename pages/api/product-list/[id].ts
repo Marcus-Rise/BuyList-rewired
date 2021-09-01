@@ -14,33 +14,19 @@ class Handler implements IHandler {
   async handle(req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
       case "GET": {
-        const item = await this._productList.getById(String(req.query.id));
-
-        if (item) {
-          res.status(200).json(item);
-        } else {
-          res.status(404).json("list not found");
-        }
+        await this.get(req, res);
         break;
       }
       case "POST": {
-        const merged = await this._productList.merge(String(req.query.id), req.body);
-
-        res.status(200).json(merged);
+        await this.post(req, res);
         break;
       }
       case "PUT": {
-        const dto = req.body;
-        await this._productList.save(dto);
-
-        res.status(200).json("updated");
-
+        await this.put(req, res);
         break;
       }
       case "DELETE": {
-        await this._productList.deleteById(String(req.query.id));
-
-        res.status(200).json("deleted");
+        await this.delete(req, res);
         break;
       }
       default: {
@@ -48,6 +34,35 @@ class Handler implements IHandler {
         break;
       }
     }
+  }
+
+  async get(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+    const item = await this._productList.getById(String(req.query.id));
+
+    if (item) {
+      res.status(200).json(item);
+    } else {
+      res.status(404).json("list not found");
+    }
+  }
+
+  async post(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+    const merged = await this._productList.merge(String(req.query.id), req.body);
+
+    res.status(200).json(merged);
+  }
+
+  async put(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+    const dto = req.body;
+    await this._productList.save(dto);
+
+    res.status(200).json("updated");
+  }
+
+  async delete(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+    await this._productList.deleteById(String(req.query.id));
+
+    res.status(200).json("deleted");
   }
 }
 
