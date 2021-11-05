@@ -2,9 +2,11 @@ import type { IUserRepository, IUserRepositoryQuery } from "./user.repository.in
 import type { UserModel } from "../model";
 import { UserModelFactory } from "../model";
 import type { IUserConfig } from "../config";
+import { USER_CONFIG } from "../config";
 import { UserException } from "../service";
 import type { IUserDto } from "./dto";
 import { UserDtoFactory } from "./dto";
+import { inject, injectable } from "inversify";
 
 interface IAuth0ApiTokenResponse {
   access_token: string;
@@ -17,8 +19,9 @@ interface IAuth0ApiErrorResponse {
   error_description: string;
 }
 
+@injectable()
 class UserRepository implements IUserRepository {
-  constructor(private readonly _config: IUserConfig) {}
+  constructor(@inject(USER_CONFIG) private readonly _config: IUserConfig) {}
 
   static isAuth0ApiErrorResponse(
     res: Record<string, unknown> | IAuth0ApiErrorResponse,

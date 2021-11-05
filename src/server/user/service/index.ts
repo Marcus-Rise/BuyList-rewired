@@ -1,3 +1,4 @@
 export * from "./user.service.interface";
+export * from "./user.service.provider";
 export * from "./user.service";
 export * from "./user.exception";

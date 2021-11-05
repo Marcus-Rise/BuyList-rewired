@@ -1,9 +1,9 @@
 interface IJsonStorageService {
-  create(initData: unknown): Promise<string>;
+  create<T = Record<string, unknown>>(initData: T): Promise<string>;
 
-  read(id: string): Promise<unknown>;
+  read<T = Record<string, unknown>>(id: string): Promise<T>;
 
-  update(id: string, data: unknown): Promise<void>;
+  update<T = Record<string, unknown>>(id: string, data: T): Promise<void>;
 }
 
 export type { IJsonStorageService };

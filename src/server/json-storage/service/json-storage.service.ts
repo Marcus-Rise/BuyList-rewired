@@ -1,14 +1,17 @@
 import type { IJsonStorageService } from "./json-storage.service.interface";
 import type { IJsonStorageConfig } from "../config";
+import { JSON_STORAGE_CONFIG } from "../config";
 import { JsonStorageException } from "../json-storage.exception";
+import { inject, injectable } from "inversify";
 
 interface IJsonStorageError {
   status: number;
   title: string;
 }
 
+@injectable()
 class JsonStorageService implements IJsonStorageService {
-  constructor(private readonly _config: IJsonStorageConfig) {}
+  constructor(@inject(JSON_STORAGE_CONFIG) private readonly _config: IJsonStorageConfig) {}
 
   static isError(obj: unknown): obj is IJsonStorageError {
     return typeof obj === "object" && obj !== null && "status" in obj && "title" in obj;
@@ -23,8 +26,8 @@ class JsonStorageService implements IJsonStorageService {
       headers: {
         "Content-Type": "application/json",
       },
-    }).then<{ uri: string }>(async ({ json }) => {
-      const data = await json();
+    }).then<{ uri: string }>(async (res) => {
+      const data = await res.json();
 
       if (JsonStorageService.isError(data)) {
         throw new JsonStorageException(data.title, data.status);
@@ -36,11 +39,11 @@ class JsonStorageService implements IJsonStorageService {
     return uri.split("/").slice(-1)[0];
   }
 
-  async read<T extends Record<string, unknown>>(id: string): Promise<T> {
+  async read<T = Record<string, unknown>>(id: string): Promise<T> {
     const { apiUrl } = this._config;
 
-    return fetch(apiUrl + "/" + id).then(async ({ json }) => {
-      const data = await json();
+    return fetch(apiUrl + "/" + id).then(async (res) => {
+      const data = await res.json();
 
       if (JsonStorageService.isError(data)) {
         throw new JsonStorageException(data.title, data.status);
@@ -50,17 +53,17 @@ class JsonStorageService implements IJsonStorageService {
     });
   }
 
-  async update<T extends Record<string, unknown>>(id: string, data: T): Promise<void> {
+  async update<T = Record<string, unknown>>(id: string, data: T): Promise<void> {
     const { apiUrl } = this._config;
 
     return fetch(apiUrl + "/" + id, {
-      method: "POST",
+      method: "PUT",
       body: JSON.stringify(data),
       headers: {
         "Content-Type": "application/json",
       },
-    }).then(async ({ json }) => {
-      const data = await json();
+    }).then(async (res) => {
+      const data = await res.json();
 
       if (JsonStorageService.isError(data)) {
         throw new JsonStorageException(data.title, data.status);
