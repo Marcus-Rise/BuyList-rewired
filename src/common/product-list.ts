@@ -14,7 +14,7 @@ interface IProduct {
 interface IProductList {
   id: string;
   title: string;
-  lastEditedDate: Date;
+  lastEditedDate: string;
   items: IProduct[];
 }
 

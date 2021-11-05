@@ -1,11 +1,11 @@
 import "reflect-metadata";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { inject, injectable } from "inversify";
-import type { IProductListService } from "../../../src/server/product-list";
-import { PRODUCT_LIST_SERVICE } from "../../../src/server/product-list";
-import type { IController } from "../../../src/server/utils/handler";
-import { nextHandlerFactory } from "../../../src/server/utils/handler";
-import { withBaseInterceptor } from "../../../src/server/utils/interceptor";
+import type { IProductListService } from "../../src/server/product-list";
+import { PRODUCT_LIST_SERVICE } from "../../src/server/product-list";
+import type { IController } from "../../src/server/utils/handler";
+import { nextHandlerFactory } from "../../src/server/utils/handler";
+import { withBaseInterceptor } from "../../src/server/utils/interceptor";
 
 @injectable()
 class Controller implements IController {
@@ -14,7 +14,11 @@ class Controller implements IController {
   async handle(req: NextApiRequest, res: NextApiResponse) {
     switch (req.method) {
       case "GET": {
-        await this.get(req, res);
+        await this.get(res);
+        break;
+      }
+      case "POST": {
+        await this.post(req, res);
         break;
       }
       case "PUT": {
@@ -32,14 +36,17 @@ class Controller implements IController {
     }
   }
 
-  async get(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    const item = await this._productList.getById(String(req.query.id));
+  async post(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+    const dto = req.body;
+    await this._productList.save(dto);
 
-    if (item) {
-      res.status(200).json(item);
-    } else {
-      res.status(404).json("list not found");
-    }
+    res.status(200).json("created");
+  }
+
+  async get(res: NextApiResponse): Promise<void> {
+    const items = await this._productList.getAll();
+
+    res.status(200).json(items);
   }
 
   async change(req: NextApiRequest, res: NextApiResponse): Promise<void> {
